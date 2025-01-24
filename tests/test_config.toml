@@ -1,0 +1,4 @@
+cache_db_filename = "autohelper_cache.db"
+autohelper_development = true
+python_path = ["projects/"]
+install_modules = ["e2e.example_feature"]

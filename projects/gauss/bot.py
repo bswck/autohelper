@@ -1,0 +1,3 @@
+import autohelper
+
+autohelper.go()

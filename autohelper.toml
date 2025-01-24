@@ -1,0 +1,5 @@
+cache_db_filename = "autohelper_cache.db"
+
+[features.activities]
+initial_activity_name = "Starting up..."
+initial_activity_state = "The client just started."

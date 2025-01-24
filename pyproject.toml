@@ -1,0 +1,127 @@
+[project]
+name = "autohelper"
+version = "0.1.0"
+description = "Extensible Discord server management software."
+readme = "README.md"
+requires-python = "~=3.13"
+dependencies = [
+    "aiofiles>=24.1.0",
+    "aiosqlite>=0.20.0",
+    "alembic>=1.14.0",
+    "pydantic-extra-types>=2.10.0",
+    "pydantic-settings>=2.6.1",
+    "pydantic>=2.9.2",
+    "sqlalchemy>=2.0.36",
+    "sqlmodel>=0.0.22",
+    "typer>=0.13.0",
+    "hikari>=2.1.0",
+    "hikari-arc>=1.4.0",
+    "hikari-miru>=4.2.0",
+    "logfire>=2.11.1",
+    "orjson>=3.10.13",
+    "greenlet>=3.1.1",
+]
+
+[dependency-groups]
+dev = ["mypy>=1.13.0", "pyright>=1.1.392.post0", "ruff>=0.8.6", "yore>=0.2.0"]
+instrumentation = [
+    "opentelemetry-instrumentation-aiohttp-client>=0.50b0",
+    "opentelemetry-instrumentation-requests>=0.50b0",
+    "opentelemetry-instrumentation-sqlalchemy>=0.50b0",
+    "opentelemetry-instrumentation-sqlite3>=0.50b0",
+    "opentelemetry-instrumentation-urllib>=0.50b0",
+    "opentelemetry-instrumentation-urllib3>=0.50b0",
+]
+test = [
+    "inline-snapshot>=0.20.1",
+    "pytest>=8.3.4",
+    "pytest-asyncio>=0.25.3",
+    "pytest-mock>=3.14.0",
+    "pytest-subtests>=0.14.1",
+    "pytest-sugar>=1.0.0",
+]
+
+[tool.uv]
+default-groups = ["dev", "instrumentation", "test"]
+
+[tool.mypy]
+strict = true
+explicit_package_bases = true
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = ["--import-mode=importlib"]
+asyncio_default_fixture_loop_scope = "session"
+
+[tool.inline-snapshot]
+format-command = "ruff format --stdin-filename {filename}"
+
+[tool.ruff]
+target-version = "py313"
+
+[tool.ruff.lint]
+# To discuss the presented rationales, contact the author (bswck).
+select = ["ALL"]
+ignore = [
+    # Description: Dynamically typed expressions (typing.Any) are disallowed
+    # Rationale:
+    #  We use Any to allow user to constrain return types of our functions on their own.
+    #  For example, having a function `def foo() -> Any: ...` allows user to write
+    #  `my_foo: int = foo()` and have it passed type checking, since `Any` disables
+    #  type checking completely.
+    "ANN401",
+
+    # Description: 1 blank line required before class docstring
+    # Rationale: Remove the warning -- D211 (no-blank-line-before-class) preferred.
+    "D203",
+
+    # Description: Multi-line docstring summary should start at the second line
+    # Rationale: Remove the warning -- D213 (multi-line-summary-second-line) preferred.
+    "D212",
+
+    # Description: Line contains TODO, consider resolving the issue
+    # Rationale: Not appropriate for the project.
+    "FIX002",
+
+    # Description: Implicitly concatenated string literals on one line
+    # Rationale: Allegedly conflicts with the formatter.
+    "ISC001",
+
+    # Description: Trailing comma missing
+    # Rationale: Allegedly conflicts with the formatter.
+    "COM812",
+
+    # Description: Move import into a type-checking block (etc.)
+    # Rationale: False negatives for Pydantic models.
+    "TC",
+
+    # Description: File is part of an implicit namespace package. Add an `__init__.py`
+    # Rationale: Implicit namespace packages are a feature
+    "INP001",
+
+    # Description: `print` found
+    # Rationale: `print` is OK
+    "T201",
+
+    # Description: Missing documentation
+    # Rationale: Important, but secondary concern
+    "D100", # Public module
+    "D101", # Public class
+    "D102", # Public method
+    "D103", # Public function
+    "D104", # Public package
+    "D105", # Magic method
+    "D107", # __init__
+
+    # Description: Use of `assert` detected
+    # Rationale: Assertions contribute to validation routines caught by Pydantic
+    "S101",
+
+    # Description: Missing issue link on the line following this TODO
+    # Rationale: Own semantics
+    "TD003",
+
+    # Description: Wildcard imports used
+    # Rationale: Red knot :)
+    "F403",
+]

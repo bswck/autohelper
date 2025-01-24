@@ -1,0 +1,12 @@
+cache_db_filename = "autohelper_cache.db"
+autohelper_development = true
+python_path = ["projects/"]
+install_modules = ["gauss.channels"]
+
+[modules.activities]
+initial_activity_name = "Starting up..."
+initial_activity_state = "The client just started."
+
+[modules.channels]
+community = { main = 1308472913497817118, forum = 1308472896116490360 }
+internal = { admins = 1308463812130771088 }

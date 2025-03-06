@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import sys
 from collections.abc import Generator, MutableSequence
-from contextlib import ContextDecorator, contextmanager
+from contextlib import ContextDecorator, contextmanager, suppress
 
 __all__ = ("errors", "guess_module_name")
 
@@ -35,6 +35,7 @@ def errors(message: str = "Caught some exceptions") -> Generator[Maybe]:
             caught.clear()
 
 
-def guess_module_name(stack_offset: int = 2) -> str:
-    name: str = sys._getframe(stack_offset).f_globals["__name__"]  # noqa: SLF001
-    return name
+def guess_module_name(stack_offset: int = 2, default: str = "__main__") -> str:
+    with suppress(AttributeError):
+        return sys._getframemodulename(stack_offset) or default
+    return sys._getframe(stack_offset).f_globals.get("__name__", default)
